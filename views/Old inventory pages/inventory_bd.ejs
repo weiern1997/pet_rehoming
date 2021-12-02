@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Inventory</h1>
+            </div>
+            <% if(locals.message){ %>
+            <div>
+              <%= message %>
+            </div>
+            <% } %>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <!-- /.col -->
+            <div class="col-12">
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Withdraw inventory</h3>
+                </div>
+                <!-- /.card-header -->
+                <form >
+                  <div class="card-body p-0">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">No.</th>
+                          <th>SKUs</th>
+                          <th>Harvest date </th>
+                          <th>Expiry date</th>
+                          <th>Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for( let i = 0; i < products.length; i++ ) { %>
+                            <td><%= i+1 %></td>
+                            <td><%= products[i].name %> </td>
+                            <td class="show_date"><%= new Date(products[i].harvest)%> </td>
+                            <td class="show_date"><%= new Date(products[i].expiry) %> </td>
+                            <td><%= products[i].quantity %> </td>
+                          </tr>
+                        <%}%>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                  <div class='card-footer'>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- /.row -->
+        </div>
+      </section>
+
+    </div>
+    
+     <footer class="main-footer">
+      <strong>Archisen BizTron</strong> 
+    </footer>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include ('partials/footer.ejs') %>
+  <script src="/js/custom.js"></script>
+</body>
+
+</html>

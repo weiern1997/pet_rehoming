@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+  <style>
+    tr.hide-table-padding td {
+      padding: 0;
+    }
+  </style>
+  <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-1">
+              <h1>Past Orders</h1>
+            </div>
+            <div class="col-sm-1">
+              <div>
+                </br>
+                <button id="clear_filter_button" class="btn btn-info">Reset filters</button>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <label>Filter by Company</label>
+
+              <div class="input-group">
+                <select name="company_id" id="company_select" class="form-control">
+                  <option>Select a company</option>
+                  <% for(let i = 0; i<company_list.length; i++){%>
+                  <option><%=company_list[i]%></option>
+                  <%}%>
+                </select>
+                <button id="company_filter_button" class="btn btn-primary">Go!</button>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <label>Filter by Fulfilment date</label>
+              <div class="input-group date" id="filter_date" data-target-input="nearest">
+                <input type="text" name="po_date" id="filter_date1" class="form-control datetimepicker-input"
+                  data-target="#filter_date" required>
+                <div class="input-group-append" data-target="#filter_date" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+                <button id="date_filter_button" class="btn btn-primary">Go!</button>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Filter by Fulfilment date Range</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <input type="text" class="form-control float-right" id="filter_range">
+                  <button id="range_filter_button" class="btn btn-primary">Go!</button>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <form action="/orders/download" method="get">
+                <div class="form-group">
+                  <label>Orders History</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                      </span>
+                    </div>
+                    <input type="text" name="range" class="form-control float-right" id="download_range">
+                  </div>
+                </div>
+                <button class="btn btn-dark" id='download_button'>Download</button>
+              </form>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <div class="modal fade" id="modal-warning">
+        <div class="modal-dialog">
+          <div class="modal-content bg-warning">
+            <div class="modal-header">
+              <h4 class="modal-title">Edit Order</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="edit_form" onsubmit="return confirm('Edit Order?');" action="/orders/edit" method="post">
+              <input type="hidden" name="_id" id="object_id_input">
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Company</label>
+                      <input type="text" class="form-control" name="company" id="company_input">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Outlet</label>
+                      <input type="text" class="form-control" name="outlet" id="outlet_input">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>PO date (YYYY)</label>
+                      <input type="text" class="form-control" name="po_date" id="po_date_text">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>PO number</label>
+                      <input type="text" class="form-control" name="po_number" id="ponumber_input">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label>DN number</label>
+                      <input type="text" class="form-control" name="dn_number" id="dnnumber_input">
+                    </div>
+                  </div>
+                </div>
+                <div class="row" id="item_input">
+                </div>
+                <div class="form-group">
+                  <label>Fulfilment date(mm/dd/yyyy)</label>
+                  <input type="text" class="form-control" name="fulfilment_date" id="ful_date_text">
+                </div>
+                <div id="items"></div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                <button type="submit" id="edit_button" class="btn btn-success">Edit</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- Main content -->
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Orders</h3>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-bordered" id="history_table">
+              <thead>
+                <tr>
+                  <th style="width: 1%">
+                    No.
+                  </th>
+                  <th style="width: 5%">
+                    Company
+                  </th>
+                  <th style="width: 5%">
+                    Outlet
+                  </th>
+                  <th style="width: 10%">
+                    Po Date
+                  </th>
+                  <th style="width: 18%" >
+                    Fulfilment date
+                  </th>
+                  <th style="width: 1%"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(var i = 0; i<orders.length;i++) {%>
+                  <tr class="accordion-toggle collapsed" id="accordion<%=i%>" data-toggle="collapse"
+                    data-parent="#accordion<%=i%>" href="#collapse<%=i%>">
+                    <td><%= i+1 %><p hidden id="object_id<%=i%>"><%= orders[i]._id %></p>
+                    </td>
+                    <td class="company" id="company<%=i%>"><%= orders[i].client.company%></td>
+                    <td id="outlet<%=i%>"><%= orders[i].client.outlet%></td>
+                    <td>
+                      <p class="show_date" id="po_date<%=i%>"><%= new Date(orders[i].po_date)%> </p>
+                    </td>
+                    <td id="ful_date<%=i%>" class="ful_date"><%=new Date(orders[i].fulfilment_date)%>
+                    </td>
+                    <td>
+                      <button type="button" style="margin:5px;" id="<%= orders[i]._id %>"
+                        class="btn btn-danger">Delete</button>
+                      <button type="button" style="margin:5px;" id="<%=i%>" data-toggle="modal"
+                        data-target="#modal-warning" class="btn btn-warning">Edit</button>
+                    </td>
+                  </tr>
+                  <tr class="hide-table-padding">
+                    <td colspan="6">
+                      <div id="collapse<%=i%>" class="collapse in p-3">
+                        <div class="row">
+                          <div class="col">PO number: <p id="po_number<%=i%>"><%= orders[i].po_number%></p>
+                            </br>
+                            DN number:<p id="dn_number<%=i%>"> <%= orders[i].dn_number%></p>
+                          </div>
+
+                          <div class="col" id="items<%=i%>">
+                            <% let counter = 0;
+                          for(let j=0; j<orders[i].items.length;j++){%>
+                            <% if(j%2){%>
+                            <p style="color:firebrick">
+                              <%= orders[i].items[j].SKU%>:
+                            </p>
+                            <%}else{%>
+                            <p style="color:black">
+                              <%= orders[i].items[j].SKU%>:
+                            </p>
+                            <%}%>
+                        <% counter += orders[i].items[j].quantity%>
+
+                            <%}%>
+                    
+                          <b>Total boxes: </b>
+                    </div>
+                    
+                    <div class="col" id="quantity<%=i%>">
+                            <% for(let j=0; j<orders[i].items.length;j++){%>
+                            <% if(j%2){%>
+                            <p style="color:firebrick">
+                              <%= ((orders[i].items[j].quantity==null)?0:orders[i].items[j].quantity) %>
+                            </p>
+                            <%}else{%>
+                            <p style="color:black">
+                              <%=((orders[i].items[j].quantity==null)?0:orders[i].items[j].quantity)%>
+                            </p>
+                            <%}%>
+                    
+                                        <%}%>
+
+                            <b><%= counter%></b>
+                          </div>
+
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Fulfil: </label>
+                              <% if(orders[i].fulfilled) {%>
+                              &#9989;
+                              <%} else {%>
+                              &#10060;
+                              <%}%>
+                                          </div>
+                                        <div class="form-group">
+                                          <label>Ack: </label>
+                                        <% if(orders[i].ack) {%>
+                              &#9989;
+                              <%} else {%>
+                              &#10060;
+                              <%}%>
+                                          </div>
+                                        <div class="form-group">
+                                          <label>Inv: </label>
+                                        <% if(orders[i].invoiced) {%>
+                              &#9989;
+                              <%} else {%>
+                              &#10060;
+                              <%}%>
+                                          </div>
+                                      </p>
+                                      <div>
+                                        Delivery date: 
+                                        <p class="del_date">
+                                        <% if(orders[i].delivery_date) {%>
+                              <%=new Date(orders[i].delivery_date)%>
+                              <%}%>
+                                        </p>
+                                        </div>
+                                        <div>
+                                          Remarks: 
+                                          <p><%=orders[i].remarks%></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <%}%>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    
+    <footer class="main-footer">
+      <strong>Archisen BizTron</strong> 
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include ('partials/footer.ejs') %>
+
+
+                  <script src="/js/dates.js"></script>
+                  <script src="/js/orders_page.js"></script>
+                  <script src="/js/filter_buttons.js"></script>
+                  <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+                  <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+                  <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+                  <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+                  <script>
+                    // $(document).ready(function () {
+                    //   $("#history_table").DataTable({
+                    //     "responsive": true,
+                    //     "autoWidth": false,
+                    //   });
+                    // });
+
+                  </script>
+</body>
+
+</html>

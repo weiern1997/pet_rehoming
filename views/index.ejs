@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <%- include ('partials/head.ejs') %>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+    <%- include ('partials/header.ejs') %>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <%- include ('partials/sidebar.ejs', {user:user}) %>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard v1</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3><%=data['ordersToday']%></h3>
+
+                <p>Orders for today</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-android-cart"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3><%=data['boxesToday']%></h3>
+
+                <p>Boxes today</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-ios-box"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3><%= data['ordersWeek']%></h3>
+
+                <p>Orders this week</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-calendar"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3><%=data['boxesWeek']%></h3>
+
+                <p>Boxes this week</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+          <!-- right col (We are only adding the ID to make the widgets sortable)-->
+          <div class="col-md-6">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Sales breakdown</h3>
+  
+              </div>
+              <div class="card-body">
+                <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+              </div>
+              <div class="text-center">
+                <input type="text" data-readOnly="true" class="knob" value="<%= data['fulfilled'] / data['ordersWeek'] * 100%> " data-width="200" data-height="200"
+                       data-fgColor="#f56954">
+    
+                <div class="knob-label">Delivery %</div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+          </div>
+
+
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <strong>Archisen BizTron</strong>
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+<%
+  //data for donut chart
+  var labels = [];
+  var numbers = [];
+  var fulfilled = data['fulfilled']
+  Object.keys(companies).forEach(function(key){
+    labels.push(key)
+    numbers.push(companies[key])
+  }) 
+%>
+<%- include ('partials/footer.ejs') %>
+<script>
+  $(document).ready(function () {
+    $('.knob').knob({
+      draw: function () {
+      }
+    })
+  })
+
+    //------------Donut chart-------------
+    let labels = "<%= labels %>";
+    labels = labels.split(',')
+    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+    var donutData        = {
+      labels: labels,
+      datasets: [
+        {
+          //ignore this
+          data: [<%=numbers%>],
+          backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+        }
+      ]
+    }
+    var donutOptions     = {
+      maintainAspectRatio : false,
+      responsive : true,
+    }
+    //Create pie or douhnut chart
+    // You can switch between pie and douhnut using the method below.
+    var donutChart = new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: donutData,
+      options: donutOptions      
+    })
+    
+
+    //------------/Donut chart--------------
+</script>
+
+</body>
+</html>

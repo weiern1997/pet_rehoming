@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+  <link rel="stylesheet" href="/css/password.css">
+</head>
+
+<body onload="document.f1.reset();" class="hold-transition register-page">
+  <div class="register-box">
+    <div class="register-logo">
+      <a href="/home"><b>BIZ</b>tron</a>
+    </div>
+
+    <div class="card">
+      <div class="card-body register-card-body">
+        <p class="login-box-msg">Register a new user</p>
+        <% if(locals.message){ %>
+        <div class=<%= messageClass %>>
+          <%= message %>
+        </div>
+        <% } %>
+        <div>
+          <span class="error"></span>
+        </div>
+        <form name="f1" action="/users/register" method="post">
+          <div class="input-group mb-3">
+            <input type="text" name="name" class="form-control" placeholder="Full name" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-id-card"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="email" name="email" class="form-control" placeholder="Email">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="text" name="company" class="form-control" placeholder="Company">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-suitcase"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-user"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" id="psw" name="password" class="form-control" placeholder="Password">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="password" id="cfm_psw" name="cfm_password" class="form-control" placeholder="Retype password">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+          </div>
+          <div id="pw_message">
+            <h3>Password must contain the following:</h3>
+            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+            <p id="number" class="invalid">A <b>number</b></p>
+            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+          </div>
+          <div id="cfm_message">
+            <p id="match" class="invalid">Match</p>
+          </div>
+          <div class="form-group">
+            <label>Access</label>
+            <select name="access" id="access" class="form-control">
+              <option value="" disabled selected>Select your option</option>
+              <option value="biztron">Biztron</option>
+              <option value="farmtron">Farmtron</option>
+              <option value="labtron">Labtron</option>
+          </select>
+        </div>
+          <div class="row">
+            <div class="col-8">
+              <div class="icheck-primary">
+                <input type="checkbox" id="admin" name="admin" value="true">
+                <label for="admin">
+                  Admin
+                </label>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+
+
+      </div>
+      <!-- /.form-box -->
+    </div><!-- /.card -->
+  </div>
+  <!-- /.register-box -->
+
+  <%- include ('partials/footer.ejs') %>
+</body>
+<script src="/js/passwordcheck.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+
+<script>
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+  $(document).ready(function () {
+    // $("button").click(function () {
+    //   let values = {}
+    //   $('form :input').each(function () {
+    //     values[this.name] = $(this).val();
+    //   })
+    //   if(!$('#admin').is(':checked')) values['admin'] = 'false'
+    //   if($(' :input'))
+      // $.post('/users/register', values, function (data, success, xhr) {
+      //   console.log(xhr.status)
+      // })
+    //})
+    //$('form').validate()
+    $("form").validate({
+  invalidHandler: function(event, validator) {
+    // 'this' refers to the form
+    alert('here')
+    var errors = validator.numberOfInvalids();
+    if (errors) {
+      var message = errors == 1
+        ? 'You missed 1 field. It has been highlighted'
+        : 'You missed ' + errors + ' fields. They have been highlighted';
+      $("div.error span").html(message);
+      $("div.error").show();
+    } else {
+      $("div.error").hide();
+    }
+  }
+});
+
+  })
+</script>
+
+</html>

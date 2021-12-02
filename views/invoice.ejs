@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-2">
+              <h1>Invoices</h1>
+            </div>
+            <div class="col-sm-1">
+              <div>
+                </br>
+                <button id="clear_filter_button" class="btn btn-info">Clear Filters</button>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <label>Filter by Company</label>
+
+              <div class="input-group">
+                <input type="text" id="company_select" class="form-control">
+
+                <button id="company_filter_button" class="btn btn-primary">Go!</button>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <label>Filter by Date</label>
+              <div class="input-group date" id="filter_date" data-target-input="nearest">
+                <input type="text" name="po_date" id="filter_date1" class="form-control datetimepicker-input"
+                  data-target="#filter_date" required>
+                <div class="input-group-append" data-target="#filter_date" data-toggle="datetimepicker">
+                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+                <button id="date_filter_button" class="btn btn-primary">Go!</button>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label>Filter by Range</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <input type="text" class="form-control float-right" id="filter_range">
+                  <button id="range_filter_button" class="btn btn-primary">Go!</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <div class="modal fade" id="modal-warning">
+        <div class="modal-dialog">
+          <div class="modal-content bg-warning">
+            <div class="modal-header">
+              <h4 class="modal-title">Finish Invoice</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="invoice_form" onsubmit="return confirm('Finish this invoice?');" action="/orders/invoice"
+              method="post">
+              <input type="hidden" name="_id" id="object_id_input">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>DN Number</label>
+                  <input type="text" name="dn_number" class="form-control">
+                </div>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                <button type="submit" id="deliver_button" class="btn btn-success">Finish</button>
+              </div>
+            </form>
+
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- Main content -->
+      <section class="content">
+
+        <!-- Default box -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Orders</h3>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table projects">
+              <thead>
+                <tr>
+                  <th style="width: 1%">
+                    No.
+                  </th>
+                  <th style="width: 5%">
+                    Company
+                  </th>
+                  <th style="width: 5%">
+                    Outlet
+                  </th>
+                  <th style="width: 10%">
+                    Order IDs
+                  </th>
+                  <th style="width: 15%">
+                    Items
+                  </th>
+                  <th style="width: 5%">
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(var i = 0; i<orders.length;i++) {%>
+                <tr>
+                  <td><%= i+1 %><p hidden id="object_id<%=i%>"><%= orders[i]._id %></p>
+                  </td>
+                  <td class="company" id="company<%=i%>"><%= orders[i].client.company%></td>
+                  <td id="outlet<%=i%>"><%= orders[i].client.outlet%></td>
+                  <td>
+                    PO date:
+                    <p class="show_date" id="po_date<%=i%>"><%= new Date(orders[i].po_date)%> </p>
+                    </br>
+                    PO number: <p id="po_number<%=i%>"><%= orders[i].po_number%></p>
+                    </br>
+                    DN number:<p id="dn_number<%=i%>"> <%= orders[i].dn_number%></p>
+                  </td>
+                  <td id="items<%=i%>">
+                    <% let counter = 0;
+                      for(let j=0; j<orders[i].items.length;j++){%>
+                    <% if(j%2){%>
+                    <p style="color:firebrick">
+                      <%= orders[i].items[j].SKU%>: <%=orders[i].items[j].quantity%>
+                    </p>
+                    <%}else{%>
+                    <p style="color:black">
+                      <%= orders[i].items[j].SKU%>: <%=orders[i].items[j].quantity%>
+                    </p>
+                    <%}%>
+                    <% counter += orders[i].items[j].quantity%>
+
+                    <%}%>
+
+                      <b>Total boxes: <%= counter%></b>
+                  </td>
+                  <td>
+                    <button class="btn btn-primary" onclick="invoice(this.id)" id="<%= orders[i]._id %>" data-toggle='modal' data-target='#modal-warning'>Done</button>
+                  </td>
+                </tr>
+                <%}%>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    
+     <footer class="main-footer">
+      <strong>Archisen BizTron</strong> 
+    </footer>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include ('partials/footer.ejs') %>
+
+
+                <script src="/js/invoice.js"></script>
+</body>
+
+</html>

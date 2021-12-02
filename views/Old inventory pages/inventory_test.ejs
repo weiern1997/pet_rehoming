@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+
+</head>
+
+<body onload="clearInp()" class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Inventory</h1>
+            </div>
+            <% if(locals.message){ %>
+            <div>
+              <%= message %>
+            </div>
+            <% } %>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row mb-2">
+
+            <div class="col-1"><button id="add_entry" class="btn btn-primary"><i class="fa fa-plus"></i></button></div>
+
+            <!-- Add product-->
+            <div class="col-md-4">
+              <div id="add_card" class="card" style="display:none">
+                <div class="card-header">
+                  <h3 class="card-title">Add Product</h3>
+                </div>
+                <!-- /.card-header -->
+                <form id="add_form" onsubmit="return confirm('Add SKU?');" action="/inventory/add" method="post">
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">SKU</label>
+                      <input type="hidden" name="SKU_name" id="SKU_name">
+                      <select class="form-control select2bs4" style="width: 100%;">
+                        <option selected="selected">Just-Mesclun</option>
+                        <option>Just-Mesclun w Mustard</option>
+                        <option>Just-Mesclun w Sorrell</option>
+                        <option>Just-Mesclun w Whatever</option>
+                        <option>Pork</option>
+                        <option>Beef</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Harvest</label>
+                      <div class="input-group date" id="harvestdate" data-target-input="nearest">
+                        <input type="text" name="harvest" id="harvest" class="form-control datetimepicker-input"
+                          data-target="#harvestdate" required>
+                        <div class="input-group-append" data-target="#harvestdate" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Expiry</label>
+                      <div class="input-group date" id="expirydate" data-target-input="nearest">
+                        <input type="text" name="expiry" id="expiry" class="form-control datetimepicker-input"
+                          data-target="#expirydate" required>
+                        <div class="input-group-append" data-target="#expirydate" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Quantity</label>
+                      <input type="number" min="1" oninput="validity.valid||(value='');" id="add_amt" name="add_amt"
+                      placeholder="Add amt" required>
+                    </div>
+                  </div>
+                  <div class='card-footer'>
+                    <button type="submit" id="add_button" class="btn btn-primary">Add</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- /.Add Product-->
+
+            <!-- View Product-->
+            <div class="col-12">
+              <div id="main-card" class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Update inventory</h3>
+                </div>
+                <!-- /.card-header -->
+                <form action='/inventory/withdraw' id="withdraw_form" method='post'>
+                  <div class="card-body p-0">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">No.</th>
+                          <th>SKUs</th>
+                          <th>Harvest date </th>
+                          <th>Expiry date</th>
+                          <th>Amount</th>
+                          <th>Discard amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for( let i = 0; i < products.length; i++ ) { %>
+                          <% var curr = new Date();
+                          if((products[i].expiry-curr)/86400000>7) {%>
+                          <tr>
+                            <% }else if(curr <products[i].expiry){%>
+                          <tr style="background-color:yellow">
+                            <%} else {%>
+                          <tr style="background-color:red">
+                            <%}%>
+                            <td><%= i+1 %></td>
+                            <td><%= products[i].name %> </td>
+                            <td><%= products[i].harvest.toLocaleDateString() %> </td>
+                            <td><%= products[i].expiry.toLocaleDateString() %> </td>
+                            <td><%= products[i].quantity %> </td>
+                            <td>
+                              <input type="number" min="1" oninput="validity.valid||(value='');"
+                                id="<%= products[i].name %>" name="<%= products[i]._id %>"
+                                placeholder="Discard amt">
+                            </td>
+                          </tr>
+                        <%}%>
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                  <div class='card-footer'>
+                    <button type="submit" id="withdraw_button" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- ./View Product-->
+
+          </div>
+          <!-- /.row -->
+        </div>
+      </section>
+
+    </div>
+
+     <footer class="main-footer">
+      <strong>Archisen BizTron</strong> 
+    </footer>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include ('partials/footer.ejs') %>
+  <script src="/js/custom.js"></script>
+
+</body>
+
+</html>

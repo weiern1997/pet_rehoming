@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Add orders</h1>
+            </div>
+
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="modal fade" id="modal-success">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-success">
+              <div class="modal-header">
+                <h4 class="modal-title">Confirm additions</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+              </div>
+              <div id="modal-content" class="modal-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Company</th>
+                      <th scope="col">Outlet</th>
+                      <th scope="col">PO number</th>
+                      <th scope="col">Items</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Fulfilment date (mm/dd/yyyy)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table_body">
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+                <button id="modal_submit" type="button" class="btn btn-outline-light">Submit</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+
+
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Order</h3>
+              </div>
+
+              <div class="card-body">
+
+                <!-- <form ref='uploadForm' id='uploadForm' action='/orders/add_client_excel' method='post'
+                  encType="multipart/form-data">
+                  <div class="col">
+                    <div class="form-group">
+                      <label>Add via excel</label>
+                      <input id='excel_file' type="file" name="workbook" />
+                      <button id='excel' type="button"> Upload! </button>
+                    </div>
+                  </div>
+                </form>
+                <a href="/assets/Purchases_template.xlsx" download>
+                  <p style="font-size:20px"><b>Click here to download Excel template</b></p>
+                </a> -->
+                <form action='/orders/add' id='manual_add_form' method='post'>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label>Company</label>
+                        <input type='text' name="company_id" id="company_select" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label>Outlet</label>
+                        <input type='text' name="outlet" id="outlet_select" class="form-control" required>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label>PO Number</label>
+                        <input type="text" name="po_number" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <label>PO Date</label>
+                      <div class="input-group date" id="podate" data-target-input="nearest">
+                        <input type="text" name="po_date" id="podate" class="form-control datetimepicker-input"
+                          data-target="#podate" required>
+                        <div class="input-group-append" data-target="#podate" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <label>Fulfilment Date</label>
+                      <div class="input-group date" id="fuldate" data-target-input="nearest">
+                        <input type="text" name="fulfilment_date" class="form-control datetimepicker-input"
+                          data-target="#fuldate" required>
+                        <div class="input-group-append" data-target="#fuldate" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="row">
+                    <div class="col">
+                      <div class='form-group'>
+                        <label>Just Mesclun</label>
+                        <input type="hidden" value="Just Mesclun" name="items[0][SKU]">
+                        <input type="number" min="1" oninput="validity.valid||(value='');" name="items[0][quantity]"
+                          class="form-control">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class='form-group'>
+                        <label>Just Mesclun Mustard</label>
+                        <input type="hidden" value="Just Mesclun w Mustard" name="items[1][SKU]">
+                        <input type="number" min="1" oninput="validity.valid||(value='');" name="items[1][quantity]"
+                          class="form-control">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class='form-group'>
+                        <label>Just Mesclun Mizuna</label>
+                        <input type="hidden" value="Just Mesclun w Mizuna" name="items[2][SKU]">
+                        <input type="number" min="1" oninput="validity.valid||(value='');" name="items[2][quantity]"
+                          class="form-control">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class='form-group'>
+                        <label>Just Mesclun Sorrel</label>
+                        <input type="hidden" value="Just Mesclun w Sorrel" name="items[3][SKU]">
+                        <input type="number" min="1" oninput="validity.valid||(value='');" name="items[3][quantity]"
+                          class="form-control">
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="row">
+                    <div class="col" id="input_column">
+                      <datalist id="SKUs">
+                        <% for( let index = 0; index < sku.length; index++ ) { %>
+                        <option value="<%= sku[index].name %> "></option>
+                        <% } %>
+                      </datalist>
+                      <div class="btn-group">
+                        <button class="btn btn-primary" onclick="addInput()" type="button">+</button>
+                        <button class="btn btn-secondary" onclick="removeInput()" type="button">-</button>
+                      </div>
+                      <div class="row input-group" id="item_group_0">
+                        <input list="SKUs" name="items[0][SKU]" placeholder="Item" class="form-control">
+                        <input type="number" min="1" oninput="validity.valid||(value='');" name="items[0][quantity]"
+                          placeholder="Quantity" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea name="remarks" class="form-control" rows="4"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+              <div class='card-footer'>
+                <button type="button" id="order_button" class="btn btn-success">Add Order!</button>
+              </div>
+              </form>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <div class="col-md-3">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Item list</h3>
+              </div>
+              <div class="card-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 99%">SKUs</th>
+                      <th style="width: 1%"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <% for( let i = 0; i < sku.length; i++ ) { %>
+                      <td class="name"><%= sku[i].name %> </td>
+                      <td><button type="button" class="btn btn-danger delete_sku">Delete</button></td>
+                    </tr>
+                    <%}%>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+      <!-- /.content -->
+    </div>
+
+    <footer class="main-footer">
+      <strong>Archisen BizTron</strong>
+    </footer>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+
+
+
+</body>
+<%- include ('partials/footer.ejs') %>
+<script src="/js/dates.js"></script>
+<script src="/js/orders_add.js"></script>
+
+
+</html>
