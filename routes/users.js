@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 var passwordValidator = require('password-validator');
 
 
@@ -24,7 +23,7 @@ const User = require('../models/users')
 router.get('/', isAdmin, (req, res) => {
 	User.find({}, null, { sort: "-admin" }, (err, result) => {
 		if (err) res.sendStatus(500)
-		res.status(200).send(result)
+		res.render('users', { title: 'User List', user: req.user, users: response.data });
 	})
 })
 
@@ -52,9 +51,9 @@ router.post('/delete', isAdmin, (req, res) => {
 	//username: 
 	/////////////////////
 	User.deleteOne({ username: req.body.user }, (err) => {
-		if (err) res.sendStatus(500)
+		if (err) res.redirect('/500')
 	})
-	res.sendStatus(200)
+	res.redirect('/users')
 })
 
 router.put('/change_pass', (req, res) => {
@@ -85,42 +84,9 @@ router.put('/change_pass', (req, res) => {
 	})
 })
 
-router.post('/register', isAdmin, (req, res) => {
-	//Self explanatory
-	let { 'name': name,
-    'email': email,
-    'company': company,
-    'username': username,
-    'password': password,
-	'admin': is_admin,
-	'access': access
-  } = req.body
-	User.findOne({ "username": username }, (err, result) => {
-		if (err) return res.sendStatus(500)
-		if (result != null) return res.status(500).send({error: "User taken"})
-		var saltRounds = 12;
-		bcrypt.hash(password, saltRounds, function (err, hash) {
-			if (err) return res.sendStatus(500)
-			var newUser = new User({ name: name, email: email, company: company, 
-				username: username, password: hash, access: access,admin: is_admin })
-			newUser.save(function (err) {
-				if (err) return res.sendStatus(500)
-				res.sendStatus(200)
-			})
-		})
-	})
-})
-
-var secretkey = process.env.SECRET_KEY;
 function isAdmin(req, res, next) {
-	// Gather the jwt access token from the request header
-	const token = req.headers['authorization']
-	if (token == null) return res.sendStatus(401) // if there isn't any token
-
-	jwt.verify(token, secretkey, (err, authdata) => {
-		if (err || !authdata.admin) return res.sendStatus(403)
-		next() // pass the execution off to whatever request the client intended
-	})
+	if (!req.user.admin) return res.sendStatus(403)
+	next()
 }
 
 module.exports = router;

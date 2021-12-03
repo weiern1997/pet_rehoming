@@ -11,7 +11,6 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var rateLimit = require("express-rate-limit");
-var axios = require('axios');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 var bcrypt = require('bcrypt');
@@ -28,7 +27,6 @@ db.once('open', function () {
 //--------------end database set up------------------
 
 //--------------------functions-----------
-
 //generate secret key for sessions
 const generateSec = () => {
   return crypto.randomBytes(34).toString('hex');
@@ -52,8 +50,6 @@ const apiLimiter = rateLimit({
 
 
 //-------------app set up ------------------
-const { default: Axios } = require('axios');
-
 var app = express();
 
 // view engine setup
@@ -112,10 +108,9 @@ passport.deserializeUser(function(id, done) {
 
 
 //---------------------Routes-------------
+var userRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var indexRouter = require('./routes/index');
-var orderRouter = require('./routes/orders')
-var itemRouter = require('./routes/items')
 
 //------------log in route-----------
 app.use('/', loginRouter);
@@ -124,9 +119,7 @@ app.use('/', loginRouter);
 app.use(ensureAuthenticated);
 
 app.use('/', indexRouter);
-app.use('/orders', orderRouter);
-app.use('/items', itemRouter);
-
+app.use('/user', userRouter);
 
 //-----------catch 404----------------
 app.get('*', (req, res) => {
