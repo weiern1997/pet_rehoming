@@ -111,6 +111,7 @@ passport.deserializeUser(function(id, done) {
 var userRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var indexRouter = require('./routes/index');
+var petsRouter = require('./routes/pets');
 
 //------------log in route-----------
 app.use('/', loginRouter);
@@ -119,6 +120,7 @@ app.use('/', loginRouter);
 app.use(ensureAuthenticated);
 
 app.use('/', indexRouter);
+app.use('/pets', petsRouter);
 app.use('/user', userRouter);
 
 //-----------catch 404----------------
