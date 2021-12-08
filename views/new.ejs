@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Add Pet</h1>
+            </div>
+
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">New pet</h3>
+              </div>
+              <div class="card-body">
+                <form action='/pets/new' method='POST' enctype="multipart/form-data">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet name" name='name'>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Gender</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet gender" name='gender'>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Breed</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet breed" name='breed'>
+                  </div>
+                  <!-- Age-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Age</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet age" name='age'>
+                  </div>
+                  <!-- Color-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Color</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet color" name='color'>
+                  </div>
+                  <!-- Fur length-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Fur Length</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet fur length" name='fur_length'>
+                  </div>
+                  <!-- Vaccinated Select-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Vaccinated</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name='vaccinated'>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <!-- Dewormed Select-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Dewormed</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name='dewormed'>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <!-- Neutered Select-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Neutered</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name='neutered'>
+                      <option>Yes</option>
+                      <option>No</option>
+                    </select>
+                  </div>
+                  <!-- Health-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet Health</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet health" name='health'>
+                  </div>
+                  <!-- About-->
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Pet About</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter pet about" name='about'>
+                  </div>
+                  <div>
+                    <label for="image">Upload Image</label>
+                    <input type="file" id="image" 
+                           name="image" value="" required>
+                </div>
+                  <div class='card-footer'>
+                    <button type="submit" class="btn btn-success">Add Pet</button>
+                  </div>
+                </form>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+
+      </section>
+      <!-- /.content -->
+    </div>
+
+    <footer class="main-footer">
+      <strong>Archisen BizTron</strong>
+    </footer>
+
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+
+
+
+</body>
+<%- include ('partials/footer.ejs') %>
+
+</html>

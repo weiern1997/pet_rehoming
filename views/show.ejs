@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <%- include ('partials/head.ejs') %>
+  <style>
+    tr.hide-table-padding td {
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body class="hold-transition sidebar-mini">
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-dark navbar-light">
+      <%- include ('partials/header.ejs') %>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <%- include ('partials/sidebar.ejs', {user:user}) %>
+      <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-1">
+              <h1>Pets</h1>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+
+      <!-- Main content -->
+      <section class="content">
+        <!-- Default box -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Pets</h3>
+          </div>
+          <div class="card-body p-0">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title"><%= pet.name %></h3>
+                <!-- Button to view pet-->
+              </div>
+              <div class="card-body">
+                <img src="data:image/<%=pet.img.contentType%>;base64,
+                    <%=pet.img.data.toString('base64')%>" alt="<%= pet.name %>" class="img-fluid">
+                <p class="card-text">Age: <%= pet.age %></p>
+                <p class="card-text">Breed: <%= pet.breed %></p>
+                <p class="card-text">About: <%= pet.about %></p>
+                <p class="card-text">Health: <%= pet.health %></p>
+                <p class="card-text">Colour: <%= pet.colour %></p>
+                <p class="card-text">Size: <%= pet.size %></p>
+                <p class="card-text">Fur Length: <%= pet.fur_length %></p>
+                <p class="card-text">Vaccinated: <%= pet.vaccinated %></p>
+                <p class="card-text">Dewormed: <%= pet.dewormed %></p>
+                <p class="card-text">Spayed/Neutered: <%= pet.spayed_neutered %></p>
+                <p class="card-text">
+              </div>  
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    
+    <footer class="main-footer">
+      <strong>Pets surrendering</strong> 
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+
+  <%- include ('partials/footer.ejs') %>
+
+</body>
+
+</html>
