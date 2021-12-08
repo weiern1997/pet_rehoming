@@ -14,6 +14,7 @@ const petSchema = new mongoose.Schema({
   spayed_neutered: Boolean,
   health: String,
   about: String,
+  adopted: Boolean,
   img:
     {
         data: Buffer,
