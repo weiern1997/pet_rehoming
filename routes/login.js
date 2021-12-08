@@ -63,7 +63,7 @@ router.post('/register', (req, res) => {
       if (err)
         return res.sendStatus(500);
       var newUser = new User({
-        name: name, email: email, username: username, password: hash, admin: false
+        name: name, email: email, username: username, password: hash, admin: false, access: "biztron"
       });
       newUser.save(function (err) {
         if (err)

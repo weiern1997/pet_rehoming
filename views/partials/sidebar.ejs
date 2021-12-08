@@ -2,7 +2,7 @@
 <a href="../../index3.html" class="brand-link">
   <img src="/img/archisen-logo-114.png" alt="Archisen Logo" class="brand-image img-circle elevation-3"
     style="opacity: .8">
-  <span class="brand-text font-weight-light">BIZtron</span>
+  <span class="brand-text font-weight-light">Pets ReHOME</span>
 </a>
 <!-- Sidebar -->
 <div class="sidebar">
@@ -12,7 +12,7 @@
       <img src="/img/archisen-logo-114.png" class="img-circle elevation-2" alt="User Image">
     </div>
     <div class="info">
-      <a href="/profile" class="d-block"> test</a>
+      <a href="/profile" class="d-block"> <%= user.name%></a>
     </div>
   </div>
 
@@ -23,92 +23,16 @@
              with font-awesome or any other icon font library -->
 
       <li class="nav-item">
-        <a href="/home" class="nav-link">
+        <a href="/pets" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt"></i>
-          <p>Dashboard</p>
+          <p>Home</p>
         </a>
       </li>
       <li class="nav-item">
-        <a href="/items/bd" class="nav-link">
+        <a href="/pets/new" class="nav-link">
           <i class="nav-icon fas fa-carrot"></i>
-          <p>Inventory</p>
+          <p>New Pet</p>
         </a>
-      </li>
-      <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-shopping-cart"></i>
-          <p>
-            Orders
-            <i class="fas fa-angle-left right"></i>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="/orders" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Current orders</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/orders/history" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Past orders</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/orders/add" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Add</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/orders/invoice" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Invoices</p>
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
-          <i class="nav-icon fas fa-user"></i>
-          <p>
-            User Management
-            <i class="fas fa-angle-left right"></i>
-            <span class="badge badge-info right"></span>
-          </p>
-        </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="/profile" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Edit Profile</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/users/change_pass" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Change Password</p>
-            </a>
-          </li>
-          <!--  only available to admin users-->
-          <%if (user.admin == true) {%>
-          <li class="nav-item">
-            <a href="/users/register" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Register User</p>
-            </a>
-          </li>
-          <%} %>
-          <%if (user.admin == true) {%>
-          <li class="nav-item">
-            <a href="/users" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>User list</p>
-            </a>
-          </li>
-          <%} %>
-        </ul>
       </li>
 
     </ul>

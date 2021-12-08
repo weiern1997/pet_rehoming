@@ -85,36 +85,20 @@
                     <img src="data:image/<%=pet.img.contentType%>;base64,
                     <%=pet.img.data.toString('base64')%>" alt="<%= pet.name %>"  height="300">
                   </td>
-                  <td class="project-actions text-right">
+                  <td class="project-actions">
                     <a class="btn btn-primary btn-sm" href="/pets/<%= pet.id %>">
                       <i class="fas fa-folder">
                       </i>
                       View
                     </a>
-                    <!-- Adopt a pet form-->
-                    <form action="/pets/<%= pet.id %>/adopt" method="POST">
-                      <input type="hidden" name="_method" value="DELETE">
-                      <input type="hidden" name="_token" value="<%= csrfToken %>">
-                      <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fas fa-pencil-alt">
-                        </i>
-                        Adopt
-                      </button>
-                    </form>
-                    <a class="btn btn-info btn-sm" href="/pets/<%= pet.id %>/edit">
-                      <i class="fas fa-pencil-alt">
-                      </i>
-                      Edit
-                    </a>
-                    <!-- Delete a pet-->
+                    <!-- Delete form-->
                     <form action="/pets/<%= pet.id %>/delete" method="POST">
-                      <input type="hidden" name="_method" value="DELETE">
-                      <input type="hidden" name="_token" value="<%= csrfToken %>">
                       <button type="submit" class="btn btn-danger btn-sm">
                         <i class="fas fa-trash">
                         </i>
                         Delete
                       </button>
+                    </form>
                   </td>
                 </tr>
                 <% }); %>
