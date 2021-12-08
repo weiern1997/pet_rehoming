@@ -24,7 +24,7 @@ var User = require('../models/users');
 /* GET login page */
 router.get('/', function (req, res) {
   if (req.isAuthenticated()) {
-    res.redirect('/home');
+    res.redirect('/pets');
   }
   else {
     res.redirect('/login');
@@ -33,7 +33,7 @@ router.get('/', function (req, res) {
 
 router.get('/login', (req, res) => {
   if (req.isAuthenticated()) {
-    res.redirect('/home');
+    res.redirect('/pets');
   }
   else {
     if('retry' in req.query) return res.render('login', {title: 'Login', message : 'User name and password do not match'})
